@@ -1,0 +1,4 @@
+R5T.T0044 - IFileSystemOperator basic extensions.
+
+Goals
+
