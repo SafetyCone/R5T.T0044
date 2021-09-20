@@ -66,11 +66,32 @@ namespace System
             _.DeleteFileOkIfNotExists(filePath);
         }
 
+        public static bool DirectoryExists(this IFileSystemOperator _,
+            string directoryPath)
+        {
+            var output = Directory.Exists(directoryPath);
+            return output;
+        }
+
+        public static bool FileExists(this IFileSystemOperator _,
+            string filePath)
+        {
+            var output = File.Exists(filePath);
+            return output;
+        }
+
         public static IEnumerable<string> FindFilesInDirectory(this IFileSystemOperator _,
             string directoryPath,
             string searchPattern)
         {
-            var output = DirectoryHelper.EnumerateFilePaths(directoryPath, searchPattern);
+            var output = DirectoryHelper.EnumerateChildFilePaths(directoryPath, searchPattern);
+            return output;
+        }
+
+        public static IEnumerable<string> EnumerateAllChildDirectoryPaths(this IFileSystemOperator _,
+            string directoryPath)
+        {
+            var output = DirectoryHelper.EnumerateAllChildDirectoryPaths(directoryPath);
             return output;
         }
 
@@ -94,6 +115,13 @@ namespace System
             string fileExtension)
         {
             var output = _.FindFirstOrDefaultFileInDirectoryByFileExtension(directoryPath, fileExtension);
+            return output;
+        }
+
+        public static DateTime GetFileModifiedDateTime(this IFileSystemOperator _,
+            string filePath)
+        {
+            var output = File.GetLastWriteTime(filePath);
             return output;
         }
 
