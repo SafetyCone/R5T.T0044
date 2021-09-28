@@ -95,6 +95,35 @@ namespace System
             return output;
         }
 
+        public static IEnumerable<string> EnumerateAllDescendentFilePaths(this IFileSystemOperator _,
+            string directoryPath)
+        {
+            var output = DirectoryHelper.EnumerateAllDescendentFilePaths(directoryPath);
+            return output;
+        }
+
+        public static IEnumerable<string> EnumerateAllDescendentFilePathsOrEmptyIfNotExists(this IFileSystemOperator _,
+            string directoryPath)
+        {
+            var directoryExists = _.DirectoryExists(directoryPath);
+
+            var output = directoryExists
+                ? _.EnumerateAllDescendentFilePaths(directoryPath)
+                : Enumerable.Empty<string>()
+                ;
+
+            return output;
+        }
+
+        public static string[] GetAllDescendentFilePathsOrEmptyIfNotExists(this IFileSystemOperator _,
+            string directoryPath)
+        {
+            var output = _.EnumerateAllDescendentFilePathsOrEmptyIfNotExists(directoryPath)
+                .ToArray();
+
+            return output;
+        }
+
         public static string FindFirstOrDefaultFileInDirectoryByFileExtension(this IFileSystemOperator _,
             string directoryPath,
             string fileExtension)
