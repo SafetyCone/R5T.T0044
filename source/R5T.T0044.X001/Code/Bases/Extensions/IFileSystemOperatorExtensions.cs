@@ -174,5 +174,15 @@ namespace System
             var output = _.HasFileInDirectoryByFileExtensionFirst(directoryPath, fileExtension);
             return output;
         }
+
+        public static void VerifyDirectoryDoesNotAlreadyExist(this IFileSystemOperator _,
+            string directoryPath)
+        {
+            var directoryExists = _.DirectoryExists(directoryPath);
+            if(directoryExists)
+            {
+                throw new Exception($"Directory already exists:\n{directoryPath}");
+            }
+        }
     }
 }
