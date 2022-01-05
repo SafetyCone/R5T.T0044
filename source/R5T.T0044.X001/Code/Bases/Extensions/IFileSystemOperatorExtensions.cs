@@ -88,6 +88,27 @@ namespace System
             return output;
         }
 
+        public static IEnumerable<string> FindFilesInDirectoryOrDirectParentDirectories(this IFileSystemOperator _,
+            string directoryPath,
+            string searchPattrn)
+        {
+            var childFilePaths = _.FindFilesInDirectory(
+                directoryPath,
+                searchPattrn);
+
+            var directoryInfo = new DirectoryInfo(directoryPath);
+
+            var parentFilePaths = directoryInfo.IsRoot()
+                ? Enumerable.Empty<string>()
+                : _.FindFilesInDirectoryOrDirectParentDirectories(
+                    directoryInfo.Parent.FullName,
+                    searchPattrn)
+                ;
+
+            var output = childFilePaths.Concat(parentFilePaths);
+            return output;
+        }
+
         public static IEnumerable<string> EnumerateAllChildDirectoryPaths(this IFileSystemOperator _,
             string directoryPath)
         {
