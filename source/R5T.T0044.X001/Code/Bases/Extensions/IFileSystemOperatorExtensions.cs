@@ -24,7 +24,7 @@ namespace System
         public static void CreateDirectoryOkIfExists(this IFileSystemOperator _,
             string directoryPath)
         {
-            DirectoryHelper.CreateDirectoryOkIfExists(directoryPath);   
+            DirectoryHelper.CreateDirectoryOkIfExists(directoryPath);
         }
 
         /// <summary>
@@ -200,9 +200,43 @@ namespace System
             string directoryPath)
         {
             var directoryExists = _.DirectoryExists(directoryPath);
-            if(directoryExists)
+            if (directoryExists)
             {
                 throw new Exception($"Directory already exists:\n{directoryPath}");
+            }
+        }
+
+        public static void VerifyFileExists(this IFileSystemOperator _,
+            string filePath)
+        {
+            var fileExists = _.FileExists(filePath);
+            if (!fileExists)
+            {
+                throw new FileNotFoundException("File path does not exist.", filePath);
+            }
+        }
+
+        public static void VerifyFilesExist(this IFileSystemOperator _,
+            IEnumerable<string> filePaths)
+        {
+            _.VerifyFilesExist(filePaths.Now());
+        }
+
+        public static void VerifyFilesExist(this IFileSystemOperator _,
+            params string[] filePaths)
+        {
+            var filePathsThatDontExist = filePaths
+                .Distinct()
+                .OrderAlphabetically()
+                .Where(xFilePath => !_.FileExists(xFilePath))
+                .Now();
+
+            var anyFilePathsDontExist = filePathsThatDontExist.Any();
+            if(anyFilePathsDontExist)
+            {
+                var message = $"File paths do not exist:\n{String.Join(Characters.NewLine, filePathsThatDontExist)}";
+
+                throw new FileNotFoundException(message);
             }
         }
     }
