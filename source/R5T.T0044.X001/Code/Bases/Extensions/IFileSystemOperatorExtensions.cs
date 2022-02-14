@@ -196,6 +196,16 @@ namespace System
             return output;
         }
 
+        public static void VerifyDirectoryExists(this IFileSystemOperator _,
+            string directoryPath)
+        {
+            var directoryExists = _.DirectoryExists(directoryPath);
+            if (!directoryExists)
+            {
+                throw new Exception($"Directory does not exist:\n{directoryPath}");
+            }
+        }
+
         public static void VerifyDirectoryDoesNotAlreadyExist(this IFileSystemOperator _,
             string directoryPath)
         {
