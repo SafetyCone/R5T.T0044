@@ -116,6 +116,13 @@ namespace System
             return output;
         }
 
+        public static IEnumerable<string> EnumerateAllChildFilePaths(this IFileSystemOperator _,
+            string directoryPath)
+        {
+            var output = DirectoryHelper.EnumerateAllChildFilePaths(directoryPath);
+            return output;
+        }
+
         public static IEnumerable<string> EnumerateAllDescendentFilePaths(this IFileSystemOperator _,
             string directoryPath)
         {
@@ -182,6 +189,16 @@ namespace System
             var filePathOrDefault = _.FindFirstOrDefaultFileInDirectoryByFileExtension(directoryPath, fileExtension);
 
             var output = WasFound.From(filePathOrDefault);
+            return output;
+        }
+
+        public static bool IsDirectoryEmpty(this IFileSystemOperator _,
+            string directoryPath)
+        {
+            var anyChildFilePaths = _.EnumerateAllChildFilePaths(directoryPath).Any();
+            var anyChildDirectoryPaths = _.EnumerateAllChildDirectoryPaths(directoryPath).Any();
+
+            var output = !(anyChildDirectoryPaths || anyChildFilePaths);
             return output;
         }
 
