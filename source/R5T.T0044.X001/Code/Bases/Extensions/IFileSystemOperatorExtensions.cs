@@ -143,6 +143,38 @@ namespace System
             return output;
         }
 
+        public static IEnumerable<string> EnumerateAllDescendentFilePaths(this IFileSystemOperator _,
+            string directoryPath,
+            string searchPattern)
+        {
+            var output = _.EmptyIfDirectoryNotExistsOr(
+                directoryPath,
+                xDirectoryPath =>
+                {
+                    var output = DirectoryHelper.EnumerateDescendentFilePaths(
+                        xDirectoryPath,
+                        searchPattern);
+
+                    return output;
+                });
+
+            return output;
+        }
+
+        public static IEnumerable<string> EmptyIfDirectoryNotExistsOr(this IFileSystemOperator _,
+            string directoryPath,
+            Func<string, IEnumerable<string>> directoryPathOperation)
+        {
+            var directoryExists = _.DirectoryExists(directoryPath);
+
+            var output = directoryExists
+                ? directoryPathOperation(directoryPath)
+                : Enumerable.Empty<string>()
+                ;
+
+            return output;
+        }
+
         public static string[] GetAllDescendentFilePathsOrEmptyIfNotExists(this IFileSystemOperator _,
             string directoryPath)
         {
