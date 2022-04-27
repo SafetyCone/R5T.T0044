@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 using R5T.Magyar;
 using R5T.Magyar.IO;
@@ -13,6 +14,15 @@ namespace System
 {
     public static class IFileSystemOperatorExtensions
     {
+        // Writes nothing to a file, clearing it.
+        public static async Task ClearFile(this IFileSystemOperator _,
+            string filePath)
+        {
+            await File.WriteAllTextAsync(
+                filePath,
+                String.Empty);
+        }
+
         public static void CopyFile(this IFileSystemOperator _,
             string sourceFilePath,
             string destinationFilePath,
