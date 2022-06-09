@@ -90,7 +90,7 @@ namespace System
             return output;
         }
 
-        public static IEnumerable<string> FindFilesInDirectory(this IFileSystemOperator _,
+        public static IEnumerable<string> FindChildFilesInDirectory(this IFileSystemOperator _,
             string directoryPath,
             string searchPattern)
         {
@@ -98,11 +98,27 @@ namespace System
             return output;
         }
 
+        public static IEnumerable<string> FindChildFilesInDirectoryByRegex(this IFileSystemOperator _,
+            string directoryPath,
+            string regexPattern)
+        {
+            var output = DirectoryHelper.EnumerateChildFilePathsByRegex(directoryPath, regexPattern);
+            return output;
+        }
+
+        public static IEnumerable<string> FindChildFilesInDirectoryByRegexOnFileName(this IFileSystemOperator _,
+            string directoryPath,
+            string regexPattern)
+        {
+            var output = DirectoryHelper.EnumerateChildFilePathsByRegexOnFileName(directoryPath, regexPattern);
+            return output;
+        }
+
         public static IEnumerable<string> FindFilesInDirectoryOrDirectParentDirectories(this IFileSystemOperator _,
             string directoryPath,
             string searchPattrn)
         {
-            var childFilePaths = _.FindFilesInDirectory(
+            var childFilePaths = _.FindChildFilesInDirectory(
                 directoryPath,
                 searchPattrn);
 
@@ -194,26 +210,38 @@ namespace System
             return output;
         }
 
-        public static string FindFirstOrDefaultFileInDirectoryByFileExtension(this IFileSystemOperator _,
+        public static string FindFirstOrDefaultChildFileInDirectoryByFileExtension(this IFileSystemOperator _,
             string directoryPath,
             string fileExtension)
         {
             var searchPattern = SearchPatternHelper.AllFilesWithExtension(fileExtension);
 
-            var output = _.FindFilesInDirectory(directoryPath, searchPattern)
+            var output = _.FindChildFilesInDirectory(directoryPath, searchPattern)
                 .FirstOrDefault();
 
             return output;
         }
 
         /// <summary>
-        /// Selects <see cref="FindFirstOrDefaultFileInDirectoryByFileExtension(IFileSystemOperator, string, string)"/> as the default.
+        /// Selects <see cref="FindFirstOrDefaultChildFileInDirectoryByFileExtension(IFileSystemOperator, string, string)"/> as the default.
         /// </summary>
-        public static string FindFileInDirectoryByFileExtension(this IFileSystemOperator _,
+        public static string FindChildFileInDirectoryByFileExtension(this IFileSystemOperator _,
             string directoryPath,
             string fileExtension)
         {
-            var output = _.FindFirstOrDefaultFileInDirectoryByFileExtension(directoryPath, fileExtension);
+            var output = _.FindFirstOrDefaultChildFileInDirectoryByFileExtension(directoryPath, fileExtension);
+            return output;
+        }
+
+        public static string[] FindChildFilesInDirectoryByFileExtension(this IFileSystemOperator _,
+            string directoryPath,
+            string fileExtension)
+        {
+            var searchPattern = SearchPatternHelper.AllFilesWithExtension(fileExtension);
+
+            var output = _.FindChildFilesInDirectory(directoryPath, searchPattern)
+                .ToArray();
+                
             return output;
         }
 
@@ -228,7 +256,7 @@ namespace System
             string directoryPath,
             string fileExtension)
         {
-            var filePathOrDefault = _.FindFirstOrDefaultFileInDirectoryByFileExtension(directoryPath, fileExtension);
+            var filePathOrDefault = _.FindFirstOrDefaultChildFileInDirectoryByFileExtension(directoryPath, fileExtension);
 
             var output = WasFound.From(filePathOrDefault);
             return output;
