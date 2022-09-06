@@ -316,7 +316,7 @@ namespace System
         public static void VerifyFilesExist(this IFileSystemOperator _,
             IEnumerable<string> filePaths)
         {
-            _.VerifyFilesExist(filePaths.Now());
+            _.VerifyFilesExist(filePaths.ToArray());
         }
 
         public static void VerifyFilesExist(this IFileSystemOperator _,
@@ -326,7 +326,7 @@ namespace System
                 .Distinct()
                 .OrderAlphabetically()
                 .Where(xFilePath => !_.FileExists(xFilePath))
-                .Now();
+                .ToArray();
 
             var anyFilePathsDontExist = filePathsThatDontExist.Any();
             if(anyFilePathsDontExist)
